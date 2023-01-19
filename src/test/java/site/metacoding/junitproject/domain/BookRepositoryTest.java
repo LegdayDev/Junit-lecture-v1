@@ -12,7 +12,12 @@ public class BookRepositoryTest {
 
     @Test
     public void saveTest() {
-        System.out.println("책등록 테스트");
+        // given(데이터 준비)
+
+        // when(테스트 실행)
+
+        // then(검증))
+
     }
     // 1. 책 등록
 
