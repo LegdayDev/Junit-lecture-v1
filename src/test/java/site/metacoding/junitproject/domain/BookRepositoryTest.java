@@ -1,13 +1,16 @@
 package site.metacoding.junitproject.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.jdbc.Sql;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,10 +36,6 @@ public class BookRepositoryTest {
                 .build();
         bookRepository.save(book);
     } // 메서드 1개와 같이 트랜잭션이 일어남.
-
-    /**
-     * @BeforeEach의 트랙
-     */
 
     // 1. 책 등록
     @Test
@@ -72,8 +71,9 @@ public class BookRepositoryTest {
         assertEquals(author, booksPS.get(0).getAuthor());
 
     }// 트랜잭션이 종료가 되면서 저장된 데이터를 초기화 한다 .
-     // 3. 책 한건보기
 
+    // 3. 책 한건보기
+    @Sql("classpath:db/tableInit.sql")
     @Test
     public void 책한건보기_test() {
         // given
@@ -85,7 +85,27 @@ public class BookRepositoryTest {
         assertEquals(title, bookPS.getTitle());
         assertEquals(author, bookPS.getAuthor());
     }// 트랜잭션이 종료가 되면서 저장된 데이터를 초기화 한다 .
-     // 4. 책 수정
 
-    // 5. 책 삭제
+    // 4. 책 삭제
+    @Sql("classpath:db/tableInit.sql")
+    @Test
+    public void 책삭제_test() {
+        // given
+        Long id = 1L;
+        // when
+        bookRepository.deleteById(id);
+        // then
+        assertFalse(bookRepository.findById(id).isPresent()); // true 면 실패, false면 성공
+
+        /**
+         * if(bookPS.isPresent()){ //.isPresent() 는 null 인지 아닌지 보는메서드
+         * //실패
+         * }else{
+         * //성공
+         * }
+         */
+
+    }
+    // 5. 책 수정
+
 }
